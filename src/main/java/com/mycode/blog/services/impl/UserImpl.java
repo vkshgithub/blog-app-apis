@@ -33,10 +33,14 @@ public class UserImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userDto, Integer id) {
         User user = userRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("User","userId",id));
-        User user1 = dtoToUser(userDto);
-        User updatedUser = userRepo.save(user1);
-        return userToDto(updatedUser);
 
+        user.setAbout(userDto.getAbout());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setName(userDto.getName());
+
+        User updatedUser = userRepo.save(user);
+        return userToDto(updatedUser);
     }
 
     @Override
@@ -46,14 +50,14 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Integer id) {
-        User user = userRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("User","id",id));
+    public void deleteUser(Integer userId) {
+        User user = userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","id", userId));
         userRepo.delete(user);
     }
 
     private User dtoToUser(UserDto userDto){
         User user = new User();
-        user.setId(user.getId());
+        user.setId(userDto.getId());
         user.setAbout(userDto.getAbout());
         user.setEmail(userDto.getEmail());
         user.setName(userDto.getName());
